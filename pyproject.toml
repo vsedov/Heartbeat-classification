@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["vsedov <viv.sedov@hotmail.com>"]
 license = "MIT"
-packages = [ {include = "src/"}]
+classifiers = ["Topic :: Utilities"]
+packages = [ {include = "heart"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11"
@@ -156,4 +157,3 @@ case_sensitive = true
 combine_as_imports = true
 line_length = 120
 atomic = true
-
