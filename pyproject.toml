@@ -28,6 +28,8 @@ onnxruntime = "^1.12.1"
 pytorchcv = "^0.0.67"
 torchinfo = "^1.7.0"
 Pillow = "^9.2.0"
+python-dotenv = "^0.20.0"
+kaggle = "^1.5.12"
 
 
 [tool.poetry.dev-dependencies]
