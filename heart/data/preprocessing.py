@@ -62,7 +62,7 @@ def data_loader(train_path, test_path, batch_size=hc.BATCH_SIZE, validation_fact
 
     # yapf: disable
     return {
-        type_name: lambda x: DataLoader(x, **{
+        type_name: DataLoader(x, **{
             "batch_size": hc.BATCH_SIZE,
             "shuffle": True
         })
