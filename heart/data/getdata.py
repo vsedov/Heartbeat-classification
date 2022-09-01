@@ -1,12 +1,12 @@
 import os
 import zipfile
 
-from heart.constants import DIR
+from heart.core import hc
 from heart.log import get_logger
 
 log = get_logger(__name__)
 
-zip_path = f"{DIR}/data/zip/"
+zip_path = f"{hc.DIR}/data/zip/"
 command = f"kaggle datasets download -d shayanfazeli/heartbeat -p {zip_path}"
 
 
@@ -60,10 +60,32 @@ def download_dir():
     """
     Download Zip and Daataset
     """
-    if check_folder(f"{DIR}/data/heartbeat"):
+    if check_folder(f"{hc.DIR}/data/heartbeat"):
         return ...
 
     check_zip()
 
     with zipfile.ZipFile(f"{zip_path}heartbeat.zip", "r") as zip_ref:
-        zip_ref.extractall(f"{DIR}/data/heartbeat")
+        zip_ref.extractall(f"{hc.DIR}/data/heartbeat")
+
+
+def fetch_data():
+    """
+    Fetch data
+
+    Returns
+    -------
+    {
+    'abnormal':
+            '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/ptbdb_abnormal.csv',
+    'train':
+            '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/mitbih_train.csv',
+    'test':
+            '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/mitbih_test.csv',
+    'normal':
+            '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/ptbdb_normal.csv'}
+    """
+    return {
+        filename.split(".")[0].split("_")[-1]: os.path.join(dirname, filename)
+        for dirname, _, filenames in os.walk(hc.DATASET_DIR) for filename in filenames
+    }

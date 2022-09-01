@@ -7,9 +7,8 @@ from typing import Optional, cast
 
 from rich.logging import RichHandler
 
-from heart import constants
-
 TRACE_LEVEL = 5
+TRACE_LOGGERS = [f"!{__name__}"]
 
 
 class CustomLogger(logging.Logger):
@@ -64,7 +63,7 @@ def _set_trace_loggers() -> None:
     test = ["!", "... "] will all be set to trace
     test = ["*", "..."] will all be set to debug
     """
-    trace_loggers = constants.TRACE_LOGGERS
+    trace_loggers = TRACE_LOGGERS
     if not trace_loggers:
         return
     for logger_name in trace_loggers:

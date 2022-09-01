@@ -1,19 +1,7 @@
 import matplotlib.pyplot as plt
 import torch
-from torchinfo import summary
 
-from heart.constants import DEFAULT_DEVICE
-
-
-def to_default_device(*pointer):
-    """Quick way to force default device to cuda"""
-    for output in pointer:
-        yield output.to(DEFAULT_DEVICE)
-
-
-def show_summary(network):
-    """Show summary of a network"""
-    summary(network)
+from heart.utils.core import hp
 
 
 def train_epoch(net, data_loader, loss_fn, optimizer=None, lr=0.01):
@@ -25,7 +13,7 @@ def train_epoch(net, data_loader, loss_fn, optimizer=None, lr=0.01):
         This can be a class or something that you have defined, that will contain the basis of all the network layer and
         structure
     dataloader : DataLoader
-        Which defines the data to trian on, this can be the test_data or training_data
+        Which defines the data to train on, this can be the test_data or training_data
     lr : Learning_Rate
         Learning rate, defines the speed at which the network would learn from, this is done through gradient descent,
         How large of a jump do you want the network to take ?
@@ -42,7 +30,7 @@ def train_epoch(net, data_loader, loss_fn, optimizer=None, lr=0.01):
     net.train()
     total_loss, acc, count = 0, 0, 0
     for features, labels in data_loader:
-        feat, lbls = to_default_device(features, labels)
+        feat, lbls = hp.to_default_device(features, labels)
         optimizer.zero_grad()
         out = net(feat)
         loss = loss_fn(out, lbls)  # cross_entropy(out,labels)

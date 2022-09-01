@@ -5,27 +5,10 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset, random_split
 from tqdm import tqdm
 
-from heart.constants import BATCH_SIZE, DATASET_DIR
+from heart.core import hc
 from heart.log import get_logger
 
 log = get_logger(__name__)
-
-datasets = {
-    filename.split(".")[0].split("_")[-1]: os.path.join(dirname, filename)
-    for dirname, _, filenames in os.walk(DATASET_DIR) for filename in filenames
-}
-"""
-{
-'abnormal':
-        '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/ptbdb_abnormal.csv',
-'train':
-        '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/mitbih_train.csv',
-'test':
-        '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/mitbih_test.csv',
-'normal':
-        '/home/viv/GitHub/active_development/Heartbeat_Classfication/heart/data/heartbeat/ptbdb_normal.csv'}
-
-"""
 
 
 def to_csv(*path):
@@ -47,7 +30,7 @@ def to_csv(*path):
             ), data.shape[0])
 
 
-def data_loader(train_path, test_path, batch_size=BATCH_SIZE, validation_factor=0.01):
+def data_loader(train_path, test_path, batch_size=hc.BATCH_SIZE, validation_factor=0.01):
     """
     Dataloader : load data and returns Dataloader from the torch lib
 
@@ -80,7 +63,7 @@ def data_loader(train_path, test_path, batch_size=BATCH_SIZE, validation_factor=
     # yapf: disable
     return {
         type_name: lambda x: DataLoader(x, **{
-            "batch_size": BATCH_SIZE,
+            "batch_size": hc.BATCH_SIZE,
             "shuffle": True
         })
         for type_name, x in {
