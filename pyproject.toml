@@ -54,7 +54,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.taskipy.tasks]
-start = "python -m src"
+start = "python -m heart"
 build = "poetry build"
 # formating - linting
 lint = "pre-commit run --all-files"

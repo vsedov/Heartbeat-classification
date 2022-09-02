@@ -1,3 +1,3 @@
-from heart.models.train_model import main
+from heart.models.predict_model import setup
 
-main()
+setup()

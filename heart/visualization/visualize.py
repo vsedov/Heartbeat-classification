@@ -29,9 +29,7 @@ def show_data(hist):
 
 
 def visualize_data_loader(data_loader):
+    fig, ax = plt.subplots(1, 10, figsize=(15, 4))
     for i, (x, y) in enumerate(data_loader):
-        log.info(x.shape, y.shape)
-        plt.imshow(x[0].view(28, 28).detech())
-        plt.show()
-        if i > 10:
-            break
+        ax[i].imshow(x.view(28, 28).detach())
+    plt.show()
