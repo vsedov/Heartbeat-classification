@@ -12,7 +12,6 @@ log = get_logger(__name__)
 load_dotenv()
 
 
-@lru_cache(maxsize=1)
 def root():
     ''' returns the absolute path of the repository root '''
     try:
@@ -25,9 +24,27 @@ def root():
 def constants():
     return {
         "DEFAULT_DEVICE": 'cuda' if torch.cuda.is_available() else 'cpu',
-        "BATCH_SIZE": 64,
-        "DEFAULT_LOSS": torch.nn.LogSoftmax,
-        "DEFAULT_OPTIM": torch.optim.Adam,
+        "BATCH_SIZE": 1000,
+        "loss": {
+            # https://neptune.ai/blog/pytorch-loss-functions
+            # Mean Absolute Error loss(x,y) = |x-y|
+            "MAE": torch.nn.L1Loss,
+            # Mean Square Error loss(x,y) =pow(x-y, 2)
+            "MSE": torch.nn.MSELoss,
+            # Negative Log Likelihood - google it ...
+            "NLLL": torch.nn.NLLLoss,
+            # Cross Entropy Loss Function
+            "CEL": torch.nn.CrossEntropyLoss,
+        },
+        "optim": {
+            # https://neptune.ai/blog/pytorch-loss-functions
+            # Mean Absolute Error loss(x,y) = |x-y|
+            "Adam": torch.optim.Adam,
+            "Sgd": torch.optim.SGD,
+            "Adagrad": torch.optim.Adagrad,
+        },
+        "lr": 2e-3,
+        "EPOCH": 100,
         "KAGGLE_USERNAME": os.getenv("KAGGLE_USERNAME"),
         "KAGGLE_KEY": os.getenv("KAGGLE_KEY"),
         #  REVISIT: (vsedov) (12:57:15 - 01/09/22): I am not a fan of hardcoding this
