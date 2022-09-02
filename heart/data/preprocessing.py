@@ -15,12 +15,25 @@ def to_csv(*path):
         Path to any valid csv to be yieled as
         torch readable data.
 
+        'N': 0, 'S': 1, 'V': 2, 'F': 3, 'Q': 4
+
+        N : Non-ecotic beats (normal beat)
+
+        S : Supraventricular ectopic beats
+
+        V : Ventricular ectopic beats
+
+        F : Fusion Beats
+
+        Q : Unknown Beats
+
     Yields:
         Tuple[TensorDataset(), path.data.length]
     """
     for files in tqdm(path):
         data = pd.read_csv(files, header=None).to_numpy()
         yield (
+            # Sample based on the index value
             TensorDataset(
                 torch.from_numpy(data[:, :-1]).float(),
                 torch.from_numpy(data[:, -1]).long(),

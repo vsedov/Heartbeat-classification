@@ -89,4 +89,3 @@ def fetch_data():
         filename.split(".")[0].split("_")[-1]: os.path.join(dirname, filename)
         for dirname, _, filenames in os.walk(hc.DATASET_DIR) for filename in filenames
     }
-
