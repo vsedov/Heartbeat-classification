@@ -1,11 +1,8 @@
-import os
-
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, TensorDataset, random_split
 from tqdm import tqdm
 
-from heart.core import hc
 from heart.log import get_logger
 
 log = get_logger(__name__)
@@ -25,12 +22,12 @@ def to_csv(*path):
         data = pd.read_csv(files, header=None).to_numpy()
         yield (
             TensorDataset(
-                torch.from_numpy(data[:, -1]).float(),
+                torch.from_numpy(data[:, :-1]).float(),
                 torch.from_numpy(data[:, -1]).long(),
             ), data.shape[0])
 
 
-def data_loader(train_path, test_path, batch_size=hc.BATCH_SIZE, validation_factor=0.01):
+def data_loader(train_path, test_path, batch_size=1000, validation_factor=0.2):
     """
     Dataloader : load data and returns Dataloader from the torch lib
 
@@ -60,12 +57,8 @@ def data_loader(train_path, test_path, batch_size=hc.BATCH_SIZE, validation_fact
     train_len -= val_len
     train_dataset, val_dataset = random_split(train_data, [train_len, val_len])
 
-    # yapf: disable
     return {
-        type_name: DataLoader(x, **{
-            "batch_size": hc.BATCH_SIZE,
-            "shuffle": True
-        })
+        type_name: DataLoader(x, batch_size=batch_size, shuffle=True)
         for type_name, x in {
             "train": train_dataset,
             "val": val_dataset,

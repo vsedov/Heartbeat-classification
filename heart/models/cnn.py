@@ -9,7 +9,7 @@ from heart.utils.defaults.model import DefaultModel
 keep_prob = 0.2
 
 
-class CNN(DefaultModel):
+class CNN(nn.Module):
 
     def __init__(self, class_val=5):
         super(CNN, self).__init__()
@@ -34,13 +34,16 @@ class CNN(DefaultModel):
         self.core_model = nn.Sequential(
             nn.Conv1d(1, 16, **self.params['encoder']['conv1']),
             nn.MaxPool1d(2),
-            nn.Conv1d(1, 32, **self.params['encoder']['conv1']),
+            nn.Conv1d(16, 64, **self.params['encoder']['conv1']),
             nn.MaxPool1d(2),
-            nn.Conv1d(1, 64, **self.params['encoder']['conv1']),
+            nn.Conv1d(64, 128, **self.params['encoder']['conv1']),
             nn.MaxPool1d(2),
         )
 
         self.linear = nn.Sequential(nn.Linear(2944, 500), nn.LeakyReLU(inplace=True), nn.Linear(500, class_val),)
 
-    def forward(self, inputs: DataLoader):
-        return self.linear(self.core_model(inputs.unsqueeze(1)))
+    def forward(self, x: DataLoader):
+        x = self.core_model(x.unsqueeze(1))
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
