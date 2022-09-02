@@ -40,10 +40,11 @@ class CNN(nn.Module):
             nn.MaxPool1d(2),
         )
 
-        self.linear = nn.Sequential(nn.Linear(2944, 500), nn.LeakyReLU(inplace=True), nn.Linear(500, class_val),)
+        self.linear = nn.Sequential(
+            nn.Linear(2944, 500), nn.LeakyReLU(inplace=True), nn.Linear(500, class_val), nn.Softmax())
 
     def forward(self, x: DataLoader):
         x = self.core_model(x.unsqueeze(1))
         x = x.view(x.size(0), -1)
-        x = self.linear(x)
-        return x
+        return self.linear(x)
+

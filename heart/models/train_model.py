@@ -1,6 +1,5 @@
 import sys
 
-import matplotlib.pyplot as plt
 import torch
 from tqdm import tqdm
 
@@ -24,20 +23,22 @@ torch.manual_seed(3407)
 
 def train_epoch(model, train_loader, lr=0.01, optim=None, loss_fn=None):
 
-    total_loss, acc, count = 0, 0, 0
-    for _, (feat, labels) in enumerate(tqdm(train_loader, file=sys.stdout)):
-        optim.zero_grad()
+    total_loss, acc, = 0, 0
+
+    count = len(train_loader.dataset)
+    for i, (feat, labels) in enumerate(tqdm(train_loader, file=sys.stdout)):
         out, lbls = hp.to_default_device(feat, labels)
         model.train()
+        optim.zero_grad()
         out = model(out)
         loss = loss_fn(out, lbls)
         loss.backward()
         optim.step()
         total_loss += loss
-        _, predicted = torch.max(out, 1)
-        acc += (predicted == lbls).sum()
-        count += len(labels)
-    return loss.item() / count, acc.item() / count
+        predicted = out.argmax(dim=1)
+        # acc += (predicted == lbls).sum()
+        acc += torch.eq(predicted, lbls).sum().float().item()
+    return loss.item() / count, acc / count
 
 
 def train():
@@ -54,17 +55,21 @@ def train():
 
     model = CNN(5).to(hc.DEFAULT_DEVICE)
     optim = hc.optim["Adam"](model.parameters(), lr=hc.lr)
-    loss_fn = hc.loss["CEL"]()
+    loss_fn = hc.loss["NLLL"]()
 
-    for ep in range(hc.epochs):
+    for ep in range(100):
         tl, ta = train_epoch(model, train_loader, optim=optim, lr=hc.lr, loss_fn=loss_fn)
         vl, va = validate(model, val_loader, loss_fn=loss_fn)
-        log.info(f"Epoch {ep:2}, Train acc={ta:.3f}, Val acc={va:.3f}, Train loss={tl:.3f}, Val loss={vl:.3f}")
+
+        log.info(f"Epoch {ep:2}, Train acc={ta:.5f}, Val acc={va:.5f}, Train loss={tl:.9f}, Val loss={vl:.9f}")
         res['train_loss'].append(tl)
         res['train_acc'].append(ta)
         res['val_loss'].append(vl)
         res['val_acc'].append(va)
 
-    #  TODO: (vsedov) (13:28:08 - 02/09/22): give path using hc
-    torch.save(model.state_dict(), 'model.mdl')
-    return (res, test_loader)
+    model_path = f"{hc.DATASET_DIR}model.mdl"
+    torch.save(model.state_dict(), model_path)
+    return (res, test_loader, model)
+
+
+train()
