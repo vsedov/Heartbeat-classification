@@ -427,6 +427,21 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "loguru"
+version = "0.6.0"
+description = "Python logging made (stupidly) simple"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+colorama = {version = ">=0.3.4", markers = "sys_platform == \"win32\""}
+win32-setctime = {version = ">=1.0.0", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+dev = ["sphinx-rtd-theme (>=0.4.3)", "sphinx-autobuild (>=0.7.1)", "Sphinx (>=4.1.1)", "isort (>=5.1.1)", "black (>=19.10b0)", "pytest-cov (>=2.7.1)", "pytest (>=4.6.2)", "tox (>=3.9.0)", "flake8 (>=3.7.7)", "docutils (==0.16)", "colorama (>=0.3.4)"]
+
+[[package]]
 name = "markupsafe"
 version = "2.1.1"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -1202,6 +1217,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "win32-setctime"
+version = "1.1.0"
+description = "A small Python utility to set file creation time on Windows"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
+
+[[package]]
 name = "yapf"
 version = "0.32.0"
 description = "A formatter for Python code."
@@ -1212,7 +1238,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "d50f81b6c10940bd31b4338d2dd358a7e73840d3ed358c1f87dd2a7d03073247"
+content-hash = "96977af3d8866f0a51809bcd82c7847835f5f0f22348d7d023f31ff40f3abd12"
 
 [metadata.files]
 appnope = []
@@ -1251,6 +1277,7 @@ jedi = []
 jinja2 = []
 kaggle = []
 kiwisolver = []
+loguru = []
 markupsafe = []
 matplotlib = []
 matplotlib-inline = []
@@ -1318,4 +1345,5 @@ typing-extensions = []
 urllib3 = []
 virtualenv = []
 wcwidth = []
+win32-setctime = []
 yapf = []

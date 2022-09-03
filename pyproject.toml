@@ -30,6 +30,7 @@ torchinfo = "^1.7.0"
 Pillow = "^9.2.0"
 python-dotenv = "^0.20.0"
 kaggle = "^1.5.12"
+loguru = "^0.6.0"
 
 
 [tool.poetry.dev-dependencies]
