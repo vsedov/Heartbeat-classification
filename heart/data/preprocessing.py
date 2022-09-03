@@ -8,7 +8,7 @@ from heart.log import get_logger
 log = get_logger(__name__)
 
 
-def to_csv(*path):
+def to_tensor_dataset(*path):
     """
     to_csv convert path to cv
     *path
@@ -65,7 +65,7 @@ def data_loader(train_path, test_path, batch_size=1000, validation_factor=0.2):
         test: DataLoader(dataset)
         }
     """
-    (train_data, train_len), (test_data, _) = to_csv(train_path, test_path)
+    (train_data, train_len), (test_data, _) = to_tensor_dataset(train_path, test_path)
     val_len = int(train_len * validation_factor)
     train_len -= val_len
     train_dataset, val_dataset = random_split(train_data, [train_len, val_len])
@@ -78,3 +78,8 @@ def data_loader(train_path, test_path, batch_size=1000, validation_factor=0.2):
             "test": test_data
         }.items()
     }
+
+
+#  TODO: (vsedov) (20:42:42 - 03/09/22): Create a default Dataset
+class HeartDataSet(DefaultDataset):
+    ...
