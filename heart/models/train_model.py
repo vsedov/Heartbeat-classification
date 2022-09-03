@@ -50,6 +50,7 @@ def train():
     }
     data_paths = fetch_data()
     dl_paths = data_loader(data_paths["train"], data_paths["test"], batch_size=1000)
+
     train_loader, val_loader, test_loader = dl_paths["train"], dl_paths["val"], dl_paths["test"]
 
     model = CNN(5).to(hc.DEFAULT_DEVICE)
