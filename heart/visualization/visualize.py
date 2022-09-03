@@ -21,9 +21,19 @@ def show_data(hist):
     plt.plot(hist['train_acc'], label='Training acc')
     plt.plot(hist['val_acc'], label='Validation acc')
     plt.legend()
+
     plt.subplot(122)
     plt.plot(hist['train_loss'], label='Training loss')
     plt.plot(hist['val_loss'], label='Validation loss')
+    plt.legend()
+    plt.show()
+
+
+def show_validation_loss(hist):
+    plt.figure(figsize=(15, 5))
+    plt.subplot(121)
+    plt.plot(hist['test_loss'], label='Test acc')
+    plt.plot(hist['test_acc'], label='Test acc')
     plt.legend()
     plt.show()
 

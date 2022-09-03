@@ -1,3 +1,3 @@
-from heart.models.predict_model import setup
+from heart.models.predict_model import setup_cnn
 
-setup()
+setup_cnn()

@@ -47,14 +47,12 @@ def constants():
         "EPOCH": 100,
         "KAGGLE_USERNAME": os.getenv("KAGGLE_USERNAME"),
         "KAGGLE_KEY": os.getenv("KAGGLE_KEY"),
-        #  REVISIT: (vsedov) (12:57:15 - 01/09/22): I am not a fan of hardcoding this
         "DIR": f"{root()}/heart/",
-        "show_data": True
+        "show_data": True,
     }
 
 
 def constants_extra():
-
     return {
         "DATASET_DIR": os.path.join(hc.DIR, "data/heartbeat/"),
     }
