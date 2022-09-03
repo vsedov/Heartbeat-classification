@@ -55,7 +55,7 @@ def train():
     model = CNN(5).to(hc.DEFAULT_DEVICE)
     optim = hc.optim["Adam"](model.parameters(), lr=hc.lr)
     loss_fn = hc.loss["CEL"]()
-    for ep in range(20):
+    for ep in range(50):
         tl, ta = train_epoch(model, train_loader, ep, hc.lr, optim, loss_fn)
         vl, va = validate(model, val_loader, loss_fn=loss_fn)
         log.info(f"Epoch {ep:2}, Train acc={ta:.5f}, Val acc={va:.5f}, Train loss={tl:.9f}, Val loss={vl:.9f}")

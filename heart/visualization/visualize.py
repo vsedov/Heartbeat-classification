@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import torch.nn as nn
 
@@ -15,7 +17,7 @@ def visualise_network(net: nn.Sequential):
     ax.show()
 
 
-def show_data(hist):
+def show_data(model_type, hist):
     plt.figure(figsize=(15, 5))
     plt.subplot(121)
     plt.plot(hist['train_acc'], label='Training acc')
@@ -26,7 +28,12 @@ def show_data(hist):
     plt.plot(hist['train_loss'], label='Training loss')
     plt.plot(hist['val_loss'], label='Validation loss')
     plt.legend()
-    plt.show()
+    file_path = f"{hc.DIR}reports/figures/{model_type}/"
+    filename = f"{file_path}{model_type}-TA_VA-TL-VL"
+    i = 0
+    while os.path.exists('{}{:d}.png'.format(filename, i)):
+        i += 1
+    plt.savefig('{}{:d}.png'.format(filename, i))
 
 
 def show_validation_loss(hist):

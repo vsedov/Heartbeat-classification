@@ -13,11 +13,10 @@ def setup_cnn():
 
     hist, test_data, model, loss_fn = train()
     if hc.show_data:
-        show_data(hist)
+        show_data("cnn", hist)
     model.load_state_dict(torch.load(f"{hc.DATASET_DIR}model.mdl"))
+
     test_loss, test_acc = validate(model, test_data, loss_fn)
-    log.info(test_acc)
-    log.info(test_loss)
     show_validation_loss({
         "test_loss": test_loss,
         "test_acc": test_acc
