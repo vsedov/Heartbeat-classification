@@ -78,8 +78,3 @@ def data_loader(train_path, test_path, batch_size=1000, validation_factor=0.2):
             "test": test_data
         }.items()
     }
-
-
-#  TODO: (vsedov) (20:42:42 - 03/09/22): Create a default Dataset
-class HeartDataSet(DefaultDataset):
-    ...
