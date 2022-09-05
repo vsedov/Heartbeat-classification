@@ -43,7 +43,7 @@ def constants():
             "Sgd": torch.optim.SGD,
             "Adagrad": torch.optim.Adagrad,
         },
-        "lr": 2e-3,
+        "lr": 3e-3,
         "EPOCH": 100,
         "KAGGLE_USERNAME": os.getenv("KAGGLE_USERNAME"),
         "KAGGLE_KEY": os.getenv("KAGGLE_KEY"),
