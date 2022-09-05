@@ -18,8 +18,6 @@ class AutoEncoder(DefaultModel):
 
         self.decoder = nn.Sequential(
             nn.Linear(20, 40), nn.SELU(), nn.Linear(40, 100), nn.SELU(), nn.Linear(100, 187), nn.Sigmoid())
-        # SELU Offers automatic normalisation, im curious to see how th eresults would compare with a normal relu
-        # function
 
     def forward(self, x):
         x = self.encoder(x)
