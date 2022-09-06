@@ -3,11 +3,13 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import torch
 from loguru import logger as log
 from scipy.signal import resample as rs
 from sklearn.utils import resample
+from torch.utils.data import DataLoader, TensorDataset
 
-from heart.core import hc, hp
+from heart.core import hp
 from heart.data.getdata import fetch_data
 
 
@@ -78,7 +80,6 @@ class HeartBeatData:
         return labels.value_counts()
         # What this shows is the data is unbalanced, we cannot work with this .
         # What we end up having is overfitting on certain classes.
-
     def resample_data(self):
         """
         Resample Data:
@@ -116,7 +117,6 @@ class HeartBeatData:
             obs_resampled = last_col[index_list[k], :] if obs_resampled is None else np.concatenate(
                 (obs_resampled, last_col[index_list[k], :]))
 
-        # this is our normalised data
         log.info(labels_resampled.value_counts())
         self.labels_resampled, self.obs_resampled = labels_resampled, obs_resampled
 
@@ -142,7 +142,7 @@ class Augmentation:
 
     def add_amplify_and_stretch_noise(self, x):
         new_y = self.amp(x)
-        new_y = self.stretch(new_y)
+        # new_y = self.stretch(new_y)
         return new_y
 
 
@@ -156,20 +156,51 @@ class HeartBeatModify(HeartBeatData, Augmentation):
     def __init__(self):
         super().__init__()
         self.obs_resampled_with_noise = np.array([self.add_gaussian_noise(obs) for obs in self.obs_resampled])
+
         self.obs_resampled_with_noise_extra = np.array(
             [self.add_amplify_and_stretch_noise(obs) for obs in self.obs_resampled])
 
     def plot_augmented_data(self):
         n_index = 0
-        obs_resampled, obs_resampled_with_noise_1, obs_resampled_with_noise_2 = self.obs_resampled, self.obs_resampled_with_noise, self.obs_resampled_with_noise_extra
+        obs_resampled, obs_resampled_with_noise, obs_resampled_with_noise_2 = self.obs_resampled, self.obs_resampled_with_noise, self.obs_resampled_with_noise_extra
         fig = plt.figure(figsize=(15, 15))
         fig.subplots_adjust(hspace=.5, wspace=.001)
         gs = fig.add_gridspec(5, 3)
 
         for index, v in enumerate(self.labels.values()):
             self.generate_subplot(fig, gs, obs_resampled[n_index], index, 0, f"normal-{v[:15]}")
-            self.generate_subplot(fig, gs, obs_resampled_with_noise_1[n_index], index, 1, f"Gaussian_blue-{v[:15]}")
+            self.generate_subplot(fig, gs, obs_resampled_with_noise[n_index], index, 1, f"Gaussian_blue-{v[:15]}")
             self.generate_subplot(fig, gs, obs_resampled_with_noise_2[n_index], index, 2, f'stech-amp-{v[:15]}')
             n_index += 10000
         title = 'Side-by-side Comparison of Original and Two Data Augmentation Versions of Beat Observations Per Class'
         hp.save(fig, "Augmented_image_compare-2", title)
+
+    def conversion(self, data, target):
+        return TensorDataset(torch.from_numpy(data), torch.from_numpy(target))
+
+    def data_loader(self):
+        batch_size = 32
+        num_train = len(self.obs_resampled)
+        indices = list(range(num_train))
+        np.random.shuffle(indices)
+        # split of data , and the ammoutn of data that we want to be validation and test data
+        # 0.5 atm
+        split = int(np.floor(0.2 * num_train))
+        train_idx, test_valid_idx = indices[split:], indices[:split]
+        # the validation split will be based on 0.5
+        test_valid_split = int(len(test_valid_idx) * 0.5)
+        test_idx, valid_idx = test_valid_idx[:test_valid_split], test_valid_idx[test_valid_split:]
+
+        factorised_resample = pd.factorize(self.labels_resampled.astype('category'))[0]
+
+        def parser(data, y):
+            return [self.conversion(data[index_type], y[index_type]) for index_type in [train_idx, valid_idx, test_idx]]
+
+        return {
+            ds_type:
+            list(map(lambda x: DataLoader(x, shuffle=True, batch_size=batch_size, num_workers=0, drop_last=True)))
+            for ds_type, container in {
+                "level_1": parser(self.obs_resampled_with_noise, factorised_resample),
+                "level_2": parser(self.obs_resampled_with_noise_extra, factorised_resample),
+            }.items() for data in container
+        }
