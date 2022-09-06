@@ -30,6 +30,7 @@ def show_data(model_type, hist):
     plt.legend()
     file_path = f"{hc.DIR}reports/figures/{model_type}/"
     filename = f"{file_path}{model_type}-TA_VA-TL-VL"
+    
     i = 0
     while os.path.exists('{}{:d}.png'.format(filename, i)):
         i += 1

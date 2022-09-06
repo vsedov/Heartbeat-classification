@@ -1,0 +1,46 @@
+@document.meta
+title: playground_3
+description: 
+authors: viv
+categories: 
+created: 2022-09-03
+version: 0.0.13
+@end
+
+* Pandas information that i did not know i could do .
+
+
+** Pandas Concat
+
+
+   Allow you to combine pandas object along a particular axis , with optional set logic
+
+   So its How one would combine a dictionary together. It uses that similar principle . 
+
+   So like if you have the following code
+   @code python
+   import pandas as pd  
+   s1 = pd.Series(['A', 'B'])
+   s2 = pd.Series(['C', 'D'])
+   
+   # Concat by default will aline them through the collumns
+    
+   # Note:  They would have to be in a list in this case
+    pd.concat([s1,s2])
+    """
+    pd.concat([s1, s2])
+       0    a
+       1    b
+       0    c
+       1    d
+   
+    """
+   
+   
+   @end
+
+   A better example is shown in this link   [Pandas Concatination](https://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html)
+
+
+
+

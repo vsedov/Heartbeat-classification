@@ -7,7 +7,6 @@ from heart.core import hc, hp
 from heart.data.getdata import fetch_data
 from heart.data.preprocessing import data_loader
 from heart.log import get_logger
-from heart.models.cnn import CNN
 from heart.models.validation import validate
 
 log = get_logger(__name__)
@@ -41,7 +40,7 @@ def train_epoch(model, train_loader, ep, lr=0.01, optim=None, loss_fn=None):
     return total_loss / total, acc / total
 
 
-def train():
+def train(model, optim, loss_fn, epoch, lr, batch_data):
     res = {
         'train_loss': [],
         'train_acc': [],
@@ -49,14 +48,12 @@ def train():
         'val_acc': []
     }
     data_paths = fetch_data()
-    dl_paths = data_loader(data_paths["train"], data_paths["test"], batch_size=1000)
+    dl_paths = data_loader(data_paths["train"], data_paths["test"], batch_size=batch_data)
+
     train_loader, val_loader, test_loader = dl_paths["train"], dl_paths["val"], dl_paths["test"]
 
-    model = CNN(5).to(hc.DEFAULT_DEVICE)
-    optim = hc.optim["Adam"](model.parameters(), lr=hc.lr)
-    loss_fn = hc.loss["CEL"]()
-    for ep in range(50):
-        tl, ta = train_epoch(model, train_loader, ep, hc.lr, optim, loss_fn)
+    for ep in range(epoch):
+        tl, ta = train_epoch(model, train_loader, ep, lr, optim, loss_fn)
         vl, va = validate(model, val_loader, loss_fn=loss_fn)
         log.info(f"Epoch {ep:2}, Train acc={ta:.5f}, Val acc={va:.5f}, Train loss={tl:.9f}, Val loss={vl:.9f}")
         res['train_loss'].append(tl)

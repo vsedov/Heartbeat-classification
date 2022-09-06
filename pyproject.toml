@@ -31,6 +31,8 @@ Pillow = "^9.2.0"
 python-dotenv = "^0.20.0"
 kaggle = "^1.5.12"
 loguru = "^0.6.0"
+ruff = "^0.0.25"
+sklearn = "^0.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -160,3 +162,6 @@ case_sensitive = true
 combine_as_imports = true
 line_length = 120
 atomic = true
+
+[tool.ruff]
+line-length = 150

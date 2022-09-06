@@ -35,3 +35,10 @@ def setup_globals():
     def unpack(iterable):
         for _ in iterable:
             ...
+
+    @hp_register
+    def save(figure, file_name, title):
+        file_path = f"{hc.DIR}reports/data/raw/"
+        filename = f"{file_path}{file_name}"
+        figure.suptitle(title)
+        figure.savefig(f"{filename}.png")

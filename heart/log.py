@@ -5,11 +5,6 @@
 import logging
 from typing import Optional, cast
 
-# Type hints with loguru:
-# https://loguru.readthedocs.io/en/stable/api/type_hints.html
-import loguru
-from loguru import logger  # noqa: WPS458
-from loguru._defaults import LOGURU_FORMAT  # noqa: WPS436
 from rich.logging import RichHandler
 
 TRACE_LEVEL = 5
