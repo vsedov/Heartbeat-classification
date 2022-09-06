@@ -30,6 +30,7 @@ class CNN(DefaultModel):
                 },
             }
         }
+        #  TODO: (vsedov) (20:14:35 - 05/09/22): Change this as well.
 
         self.core_model = nn.Sequential(
             nn.Conv1d(1, 16, **self.params['encoder']['conv1']),
@@ -40,6 +41,7 @@ class CNN(DefaultModel):
             nn.MaxPool1d(2),
         )
 
+        #  TODO: (vsedov) (20:16:15 - 05/09/22): Change this to fit new way of dealing with data.
         self.linear = nn.Sequential(nn.Linear(2944, 500), nn.LeakyReLU(inplace=True), nn.Linear(500, class_val))
 
     def forward(self, x: DataLoader):
