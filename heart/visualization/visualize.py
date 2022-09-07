@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import torch.nn as nn
 
+from heart.core import hc
 from heart.log import get_logger
 
 log = get_logger(__name__)
@@ -12,12 +13,11 @@ def visualise_network(net: nn.Sequential):
     weight_input = next(net.parameters())
     fig, ax = plt.subplot(1, 10, figsize=(15, 4))
     for i, x in enumerate(weight_input):
-        #  TODO: (vsedov) (13:25:07 - 02/09/22): Finish this function
         ax[i].imshow(x.view(28, 28).detach())
     ax.show()
 
 
-def show_data(model_type, hist):
+def show_data(name, model_type, hist):
     plt.figure(figsize=(15, 5))
     plt.subplot(121)
     plt.plot(hist['train_acc'], label='Training acc')
@@ -29,8 +29,8 @@ def show_data(model_type, hist):
     plt.plot(hist['val_loss'], label='Validation loss')
     plt.legend()
     file_path = f"{hc.DIR}reports/figures/{model_type}/"
-    filename = f"{file_path}{model_type}-TA_VA-TL-VL"
-    
+    filename = f"{file_path}{model_type}-{name}"
+
     i = 0
     while os.path.exists('{}{:d}.png'.format(filename, i)):
         i += 1
