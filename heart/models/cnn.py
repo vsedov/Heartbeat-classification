@@ -1,11 +1,10 @@
 # import torch
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchsummary import summary
 
-from heart.core import hc, hp
+from heart.core import hc
 
 keep_prob = 0.2
 
@@ -47,10 +46,5 @@ class CNNConv1d(nn.Module):
         return self.softmax(x)
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model2 = CNNConv1d(2, 5).to(device)
-
-# check keras-like model summary using torchsummary
-from torchsummary import summary
-
-summary(model2, (32, 187))
+def get_summary():
+    summary(CNNConv1d(2, 5).to(hc.DEFAULT_DEVICE), (32, 187))
