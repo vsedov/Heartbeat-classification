@@ -1008,11 +1008,18 @@ jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
 
 [[package]]
 name = "ruff"
-version = "0.0.25"
+version = "0.0.29"
 description = "An extremely fast Python linter, written in Rust."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/charliermarsh/ruff"
+reference = "main"
+resolved_reference = "55d1f34bae2edf951ae64955c824c8210bb8c55e"
 
 [[package]]
 name = "scikit-learn"
@@ -1180,6 +1187,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "torchsummary"
+version = "1.5.1"
+description = "Model summary in PyTorch similar to `model.summary()` in Keras"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "torchvision"
 version = "0.13.1"
 description = "image and video datasets and models for torch deep learning"
@@ -1293,7 +1308,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "ed74bc651ece5744b4f0fb4cd6bbcda7092656caa4c01f40eb6e329801b1f1dc"
+content-hash = "dc00cfd8f14f383a09dc8212f9f287e77466a65f740f97e5590b327ba3ae80d1"
 
 [metadata.files]
 appnope = []
@@ -1398,6 +1413,7 @@ toml = []
 tomli = []
 torch = []
 torchinfo = []
+torchsummary = []
 torchvision = []
 tqdm = []
 traitlets = []
