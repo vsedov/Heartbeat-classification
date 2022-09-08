@@ -63,6 +63,6 @@ def train(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, 
         res['val_acc'].append(va)
         if vl <= valid_loss_min:
             log.info(f'Validation loss decreased ({valid_loss_min:.6f} --> {vl:.6f}).  Saving model ...')
-            torch.save(model.state_dict(), f"{hc.DATASET_DIR}{model_type}/{model_name}")
+            torch.save(model.state_dict(), f"{hc.DATASET_DIR}{model_type}/{model_name}.mdl")
             valid_loss_min = vl
     return res
