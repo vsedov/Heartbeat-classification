@@ -31,8 +31,9 @@ Pillow = "^9.2.0"
 python-dotenv = "^0.20.0"
 kaggle = "^1.5.12"
 loguru = "^0.6.0"
-ruff = "^0.0.25"
 sklearn = "^0.0"
+torchsummary = "^1.5.1"
+ruff = {git = "https://github.com/charliermarsh/ruff", rev = "main"}
 
 
 [tool.poetry.dev-dependencies]

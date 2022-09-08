@@ -42,7 +42,7 @@ def get_logger(name: Optional[str] = None) -> CustomLogger:
 
 
 def setup() -> None:
-    """ setup file for logger - initalises level, format  and its own trace """
+    """ setup file for logger - level, format  and its own trace """
     logging.TRACE = TRACE_LEVEL
     logging.addLevelName(TRACE_LEVEL, "TRACE")
     logging.setLoggerClass(CustomLogger)

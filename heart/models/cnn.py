@@ -1,50 +1,50 @@
 # import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
+import torch.nn.functional as F
+import torch.optim as optim
+from torchsummary import summary
 
-from heart.utils.defaults.model import DefaultModel
-
-# import torch.nn as F
+from heart.core import hc
 
 keep_prob = 0.2
 
 
-class CNN(DefaultModel):
+class CNNConv1d(nn.Module):
 
-    def __init__(self, class_val=5):
-        super(CNN, self).__init__()
-        #  OPTIM: (vsedov) (12:01:27 - 31/08/22): If you want to manually fine tune your parameters for each
-        #  sequence, then i recommend you hard code this, else we can use a default param dict for  convenience .
+    def __init__(self, input_features, output_dim):
+        super().__init__()
+        # 1-dimensional convolutional layer
+        self.conv0 = nn.Conv1d(input_features, 128, output_dim, stride=1, padding=0)
+        self.conv1 = nn.Conv1d(128, 128, output_dim, stride=1, padding=2)
+        self.pool1 = nn.MaxPool1d(5, 2)
+        self.fc1 = nn.Linear(256, 32)
+        self.fc2 = nn.Linear(32, output_dim)
+        self.softmax = nn.LogSoftmax(dim=1)
 
-        self.params = {
-            'encoder': {
-                'conv1': {
-                    'kernel_size': 3,
-                    'stride': 1,
-                    'padding': 1
-                },
-                'conv2': {
-                    'kernel_size': 3,
-                    'stride': 1,
-                    'padding': 1
-                },
-            }
-        }
-        #  TODO: (vsedov) (20:14:35 - 05/09/22): Change this as well.
+    def forward(self, x):
+        # I had to do this functionally, i wasnt sure how else to do it . without using F.relu
+        x = x.view(32, -1, 187)
+        x = F.relu(self.conv0(x))
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = x.view(32, -1)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, keep_prob)
+        x = self.fc2(x)
+        return self.softmax(x)
 
-        self.core_model = nn.Sequential(
-            nn.Conv1d(1, 16, **self.params['encoder']['conv1']),
-            nn.MaxPool1d(2),
-            nn.Conv1d(16, 64, **self.params['encoder']['conv1']),
-            nn.MaxPool1d(2),
-            nn.Conv1d(64, 128, **self.params['encoder']['conv1']),
-            nn.MaxPool1d(2),
-        )
 
-        #  TODO: (vsedov) (20:16:15 - 05/09/22): Change this to fit new way of dealing with data.
-        self.linear = nn.Sequential(nn.Linear(2944, 500), nn.LeakyReLU(inplace=True), nn.Linear(500, class_val))
-
-    def forward(self, x: DataLoader):
-        x = self.core_model(x.unsqueeze(1))
-        x = x.view(x.size(0), -1)
-        return self.linear(x)
+def get_summary():
+    summary(CNNConv1d(2, 5).to(hc.DEFAULT_DEVICE), (32, 187))
