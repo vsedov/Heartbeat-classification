@@ -1,7 +1,7 @@
-from collections import ChainMap, namedtuple
+from collections import ChainMap
 
 import torch
-from attr import define, field
+from attr import define
 from loguru import logger as log
 
 from heart.core import hc

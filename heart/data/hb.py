@@ -202,9 +202,11 @@ class HeartBeatModify(HeartBeatData, Augmentation):
             }.items()]
 
         return {
-            ds_type: list(map(
-                lambda x: {x[1]: DataLoader(x[0], shuffle=True, batch_size=batch_size, num_workers=0, drop_last=True)},
-                container))
+            ds_type: list(
+                map(
+                    lambda x:
+                    {x[1]: DataLoader(x[0], shuffle=True, batch_size=batch_size, num_workers=0, drop_last=True)},
+                    container))
             for ds_type, container in {
                 "level_1": parser(self.obs_resampled_with_noise, factorised_resample),
                 "level_2": parser(self.obs_resampled_with_noise_extra, factorised_resample),
