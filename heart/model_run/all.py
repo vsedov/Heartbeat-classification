@@ -36,8 +36,14 @@ def conv_1d():
 def auto_encoder():
     model = AutoEncoder().to(hc.DEFAULT_DEVICE)
     return NetworkDefine(
-        model, 3e-4, hc.optim["Adam"](model.parameters(), lr=3e-4, weight_decay=0), hc.loss["MSE"](), 50,
-        "model_ech_heartbeat_categorization_2_auto_encoder", "AE")
+        model,
+        3e-4,
+        hc.optim["Adam"](model.parameters(), lr=3e-4, weight_decay=0),
+        hc.loss["MSE"](),
+        2,
+        "trial_auto_encoder",
+        "AE",
+    )
 
 
 def validate_data(test_loader, network_data):
@@ -65,7 +71,7 @@ def train_data(level_type, network_class, train_loader, valid_loader):
 
 
 def setup():
-    data = HeartBeatModify().data_loader()
+    data = HeartBeatModify().autoencoder_data_set()
     level_data = {level_type: ChainMap(*data[level_type])
                   for level_type in ["level_1", "level_2"]}
 
@@ -73,6 +79,16 @@ def setup():
         f"{lt}_{network.name}":
         [pd := (train_data(lt, network, ld["train"], ld["valid"])),
          validate_data(ld["test"], pd)]
-        for lt, ld in level_data.items() for network in [conv_1d()]
+        for lt, ld in level_data.items() for network in [auto_encoder(), conv_1d()]
     }
     return model_data
+
+
+def main():
+    setup()
+
+
+if __name__ == "__main__":
+    exit(main())
+else:
+    pass
