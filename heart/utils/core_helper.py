@@ -47,16 +47,6 @@ def setup_globals():
         figure.savefig(f"{filename}.png")
 
     @hp_register
-    def label_filter(labels, loss_fn):
-        loss_function_name = loss_fn.__class__.__name__
-        log.info(loss_function_name)
-        if loss_function_name == "MSELoss":
-            labels = labels.double()
-            labels = labels.view(labels.size(0), -1, 187)
-            return labels
-        return labels
-
-    @hp_register
     def filtered_acc(network, loss_fn):
         loss_function_name = loss_fn.__class__.__name__
         log.info(loss_function_name)
