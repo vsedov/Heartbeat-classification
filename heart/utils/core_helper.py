@@ -3,7 +3,10 @@ import builtins
 from torchinfo import summary
 
 from heart.core import hc, hc_register_const, hp_register
+from heart.log import get_logger
 from heart.utils.constants import constants, constants_extra
+
+log = get_logger(__name__)
 
 
 def setup_constants():
@@ -42,3 +45,11 @@ def setup_globals():
         filename = f"{file_path}{file_name}"
         figure.suptitle(title)
         figure.savefig(f"{filename}.png")
+
+    @hp_register
+    def filtered_acc(network, loss_fn):
+        loss_function_name = loss_fn.__class__.__name__
+        log.info(loss_function_name)
+        if loss_function_name == "MSELoss":
+            return network.argmax()
+        return network.argmax(dim=1)

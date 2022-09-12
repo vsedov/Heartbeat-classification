@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from heart.core import hc, hp
 from heart.log import get_logger
-from heart.models.validation import validate
+from heart.models.validation import validate, validate_ae
 
 log = get_logger(__name__)
 # Introduce a manual seed : one of the best seeds out there
@@ -42,6 +42,35 @@ def train_epoch(model, train_loader, ep, lr=0.01, optim=None, loss_fn=None):
     return total_loss / total, acc / total
 
 
+#  REVISIT: (vsedov) (23:30:51 - 11/09/22): I might get rid of this entirly
+def train_auto_encoder(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, lr, model_type):
+    model = model.double()
+    model.cuda()
+    model = model.train()
+    losses = defaultdict(list)
+    losses["train_loss"]
+    losses["val_loss"]
+
+    for ep in range(epoch):
+        bar = tqdm(train_loader, file=sys.stdout)
+        for i, (x, _) in enumerate(bar):
+            x = x.cuda()
+            x = x.double()
+            x_hat = model(x)
+            loss = loss_fn(x_hat, x)
+            optim.zero_grad()
+            loss.backward()
+            optim.step()
+            if i % 10:
+                losses["train_loss"].append(float(loss))
+        vl = validate_ae(model, valid_loader, loss_fn=loss_fn)
+        losses["val_loss"].extend(vl)
+        log.info(f"Epoch {ep:2} / {epoch+1}, loss: {loss:.3f}")
+
+    torch.save(model.state_dict(), f"{hc.DATASET_DIR}{model_type}/{model_name}.mdl")
+    return losses
+
+
 def train(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, lr, model_type):
     model = model.double()
     model.cuda()
@@ -51,7 +80,10 @@ def train(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, 
     res["train_acc"]
     res["val_acc"]
     res["val_loss"]
-    # [09/07/22 18:19:16] INFO     Epoch  3 / 51, Train acc=0.84425, Val acc=0.24940, Train loss=0.446057108, Val loss=224.813652271                                                 train_model.py:58
+
+    if model_type == "AE":
+        return train_auto_encoder(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, lr, model_type)
+
     for ep in range(1, epoch + 1):
         tl, ta = train_epoch(model, train_loader, ep, lr, optim, loss_fn)
         vl, va = validate(model, valid_loader, loss_fn=loss_fn)
@@ -65,4 +97,5 @@ def train(model, train_loader, valid_loader, loss_fn, optim, model_name, epoch, 
             log.info(f'Validation loss decreased ({valid_loss_min:.6f} --> {vl:.6f}).  Saving model ...')
             torch.save(model.state_dict(), f"{hc.DATASET_DIR}{model_type}/{model_name}.mdl")
             valid_loss_min = vl
+
     return res

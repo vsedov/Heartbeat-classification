@@ -17,7 +17,17 @@ def visualise_network(net: nn.Sequential):
     ax.show()
 
 
-def show_data(name, model_type, hist):
+def show_data(name, model_type, hist, epoch):
+    if model_type == "AE":
+        # validation loss and loss
+        plt.figure(figsize=(15, 5))
+        plt.subplot(121)
+        plt.plot(hist['test_loss'], label='Test loss')
+        plt.plot(hist["val_loss"], label="Validation loss")
+        plt.legend()
+        os.makedirs(f"{hc.DATASET_DIR}{model_type}/", exist_ok=True)
+        plt.savefig(f"{hc.DATASET_DIR}{model_type}/{name}_loss_{epoch}.png")
+
     plt.figure(figsize=(15, 5))
     plt.subplot(121)
     plt.plot(hist['train_acc'], label='Training acc')
