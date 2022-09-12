@@ -7,7 +7,7 @@ from loguru import logger as log
 from heart.core import hc
 from heart.data.hb import HeartBeatModify
 from heart.models.autoencoder import AutoEncoder
-from heart.models.cnn import CNNConv1d, CNNConv1dV2
+from heart.models.cnn import CNNConv1d
 from heart.models.train_model import train
 from heart.models.validation import validate
 from heart.utils.defaults.model import DefaultModel
@@ -31,14 +31,6 @@ def conv_1d():
     return NetworkDefine(
         model, 3e-4, hc.optim["Adam"](model.parameters(), lr=3e-4), hc.loss["NLLL"](), 30,
         "model_ecg_heartbeat_cnn_conv1d", "cnn")
-
-
-def conv_1d_v2():
-    model = CNNConv1dV2(1, 5).to(hc.DEFAULT_DEVICE)
-
-    return NetworkDefine(
-        model, 3e-4, hc.optim["Adam"](model.parameters(), lr=3e-4), hc.loss["NLLL"](), 30,
-        "model_ecg_heartbeat__cnn_conv1d_v2", "cnn")
 
 
 def auto_encoder():
@@ -91,7 +83,7 @@ def setup():
         f"{lt}_{network.name}":
         [pd := (train_data(lt, network, ld["train"], ld["valid"])),
          validate_data(ld["test"], pd)]
-        for lt, ld in conv_data.items() for network in [conv_1d(), conv_1d_v2()]
+        for lt, ld in conv_data.items() for network in [conv_1d()]
     }
     ae_data_loader = {
         f"{lt}_{network.name}": [pd := (train_data(lt, network, ld, ld))]
