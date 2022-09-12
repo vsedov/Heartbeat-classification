@@ -19,8 +19,11 @@ def validate(model, loader, loss_fn):
         with torch.no_grad():
             logits = model(x)
             current_loss = loss_fn(logits, y)
-            predicted = logits.argmax(dim=1)
+            predicted = hp.filtered_acc(logits, loss_fn)
             loss += current_loss.item() * feat.size(0)
-            correct += torch.eq(predicted, y).sum().float().item()
+            if loss_fn.__class__.__name__ != "MSELoss":
+                correct += torch.eq(predicted, y).sum().float().item()
+            else:
+                correct = (logits - y).abs().sum().item()
 
     return loss / total, correct / total
