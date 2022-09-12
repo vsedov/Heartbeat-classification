@@ -212,3 +212,50 @@ class HeartBeatModify(HeartBeatData, Augmentation):
                 "level_2": parser(self.obs_resampled_with_noise_extra, factorised_resample),
             }.items()
         }
+
+    def plot_ae_dataset(self, train_n, train_a):
+        for i in range(8):
+            series = train_n[i]
+            plt.subplot(2, 4, i + 1)
+            plt.plot(series.tolist())
+            plt.title("Normal ECG Example {}".format(i + 1))
+            plt.xlabel("Time")
+
+        plt.show()
+
+        for i in range(8):
+            series = train_a[i]
+            plt.subplot(2, 4, i + 1)
+            plt.plot(series.tolist())
+            plt.title("Abnormal ECG Example {}".format(i + 1))
+            plt.xlabel("Time")
+        plt.show()
+
+        pass
+
+    def auto_encoder_dataset(self):
+        """AutoEncoder, dataset mainly based on autoencoders."""
+        self.dataset[self.dataset[187] == 0]
+        data = self.obs_resampled.squeeze()
+
+        factorised_resample = pd.factorize(self.labels_resampled.astype('category'))[0]
+        # log.info(factorised_resample)
+        # split data normal and abnormal
+        normal_data = data[factorised_resample == 0]
+        abnormal_data = data[factorised_resample == 1]
+        # log.info(normal_data)
+        # log.info(abnormal_data)
+
+        trainN = normal_data[:int(0.8 * len(normal_data))]
+        testN = normal_data[int(0.8 * len(normal_data)):]
+        trainA = abnormal_data[:int(0.8 * len(abnormal_data))]
+        testA = abnormal_data[int(0.8 * len(abnormal_data)):]
+
+        return {
+            "level_1":
+                DataLoader(
+                    TensorDataset(torch.from_numpy(trainN), torch.from_numpy(trainA)), shuffle=True, batch_size=32),
+            "level_2":
+                DataLoader(
+                    TensorDataset(torch.from_numpy(testN), torch.from_numpy(testA)), shuffle=True, batch_size=32)
+        }
