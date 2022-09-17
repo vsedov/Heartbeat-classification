@@ -1,7 +1,7 @@
 from collections import ChainMap
 
 from heart.data.hb import HeartBeatModify
-from heart.model_run.config import auto_encoder, conv_1d, train_data, validate_data
+from heart.model_run.config import auto_encoder, conv_1d, conv_1d_model_2, train_data, validate_data
 
 
 def setup_all():
@@ -15,7 +15,7 @@ def setup_all():
         f"{lt}_{network.name}":
         [pd := (train_data(lt, network, ld["train"], ld["valid"])),
          validate_data(ld["test"], pd)]
-        for network in [conv_1d()] for lt, ld in conv_data.items()
+        for network in [conv_1d_model_2(), conv_1d()] for lt, ld in conv_data.items()
     }
     ae_data_loader = {
         f"{lt}_{network.name}": [pd := (train_data(lt, network, ld, ld))]

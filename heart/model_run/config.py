@@ -4,7 +4,7 @@ from loguru import logger as log
 
 from heart.core import hc
 from heart.models.autoencoder import AutoEncoder
-from heart.models.cnn import CNNConv1d
+from heart.models.cnn import CNNConv1d, Conv1dV2
 from heart.models.train_model import train
 from heart.models.validation import validate
 from heart.utils.defaults.model import DefaultModel
@@ -28,6 +28,13 @@ def conv_1d():
     return NetworkDefine(
         model, 3e-4, hc.optim["Adam"](model.parameters(), lr=3e-4), hc.loss["NLLL"](), 30,
         "model_ecg_heartbeat_cnn_conv1d", "cnn")
+
+
+def conv_1d_model_2():
+    model = Conv1dV2(1, 5).to(hc.DEFAULT_DEVICE)
+
+    return NetworkDefine(
+        model, 3e-4, hc.optim["Adam"](model.parameters(), lr=3e-4), hc.loss["NLLL"](), 30, "SecondCNNModel", "cnn")
 
 
 def auto_encoder():
