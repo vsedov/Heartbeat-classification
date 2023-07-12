@@ -22,7 +22,7 @@ def check_folder(folder):
     BOolean
         True if it is a folder and that the folder contains some item
     """
-    return True if os.path.isdir(folder) and os.listdir(folder) else False
+    return bool(os.path.isdir(folder) and os.listdir(folder))
 
 
 def check_current_path_file(filename):
@@ -38,7 +38,7 @@ def check_current_path_file(filename):
     Booelan
         True if the file exists else False
     """
-    return True if str(os.path.exists(filename)) else False
+    return bool(str(os.path.exists(filename)))
 
 
 def check_zip():

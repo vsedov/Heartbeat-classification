@@ -142,9 +142,7 @@ class Augmentation:
         return data * -alpha * data + (1+alpha)
 
     def add_amplify_and_stretch_noise(self, x):
-        new_y = self.amp(x)
-        # new_y = self.stretch(new_y)
-        return new_y
+        return self.amp(x)
 
 
 class HeartBeatModify(HeartBeatData, Augmentation):
@@ -218,7 +216,7 @@ class HeartBeatModify(HeartBeatData, Augmentation):
             series = train_n[i]
             plt.subplot(2, 4, i + 1)
             plt.plot(series.tolist())
-            plt.title("Normal ECG Example {}".format(i + 1))
+            plt.title(f"Normal ECG Example {i + 1}")
             plt.xlabel("Time")
 
         plt.show()
@@ -227,11 +225,9 @@ class HeartBeatModify(HeartBeatData, Augmentation):
             series = train_a[i]
             plt.subplot(2, 4, i + 1)
             plt.plot(series.tolist())
-            plt.title("Abnormal ECG Example {}".format(i + 1))
+            plt.title(f"Abnormal ECG Example {i + 1}")
             plt.xlabel("Time")
         plt.show()
-
-        pass
 
     def auto_encoder_dataset(self):
         """AutoEncoder, dataset mainly based on autoencoders."""

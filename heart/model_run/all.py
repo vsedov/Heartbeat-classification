@@ -58,7 +58,7 @@ def train_data(level_type, network_class, train_loader, valid_loader):
     model = network_class.model
     loss_fn = network_class.loss_fn
     optim = network_class.optim
-    model_name = network_class.name + "_" + level_type
+    model_name = f"{network_class.name}_{level_type}"
     epoch = network_class.epoch
     lr = network_class.lr
     model_type = network_class.network_type
@@ -90,7 +90,4 @@ def setup():
         for lt, ld in auto_encoder_data.items() for network in [auto_encoder()]
     }
 
-    return {
-        **ae_data_loader,
-        **model_data
-    }
+    return ae_data_loader | model_data

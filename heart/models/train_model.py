@@ -25,7 +25,7 @@ def train_epoch(model, train_loader, ep, lr=0.01, optim=None, loss_fn=None):
     acc, total_loss = 0, 0
     total = len(train_loader.dataset)
     model.train()
-    for _, (feat, labels) in enumerate(bar):
+    for feat, labels in bar:
         out, lbls = hp.to_default_device(feat, labels)
         # Error Model is out of shape , or something is wrong here.
 

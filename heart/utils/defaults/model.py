@@ -15,5 +15,7 @@ class DefaultModel(nn.Module):
 
     def __str__(self):
 
-        return super().__str__(
-        ) + f'\nParameters_Trained: {sum([np.prod(p.size()) for p in filter(lambda p: p.requires_grad, self.parameters())])}'
+        return (
+            super().__str__()
+            + f'\nParameters_Trained: {sum(np.prod(p.size()) for p in filter(lambda p: p.requires_grad, self.parameters()))}'
+        )
